@@ -551,3 +551,10 @@ body {
   }
 }
 
+/* Hide separate top HUD bar on desktop (>=1024px) since HUD stats are placed in the Right Panel */
+@media (min-width: 1024px) {
+  .app-hud-header {
+    display: none !important;
+  }
+}
+

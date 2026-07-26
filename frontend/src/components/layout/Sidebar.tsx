@@ -22,15 +22,18 @@ export default function Sidebar() {
       className="app-sidebar"
       style={{
         width: '14rem',
-        minHeight: '100vh',
+        height: '100vh',
+        maxHeight: '100vh',
+        position: 'sticky',
+        top: 0,
+        overflowY: 'auto',
         backgroundColor: 'var(--color-bg-card)',
         borderRight: '1px solid var(--color-bg-border)',
         display: 'flex',
         flexDirection: 'column',
         padding: '1.5rem 0.75rem',
-        position: 'sticky',
-        top: 0,
         flexShrink: 0,
+        zIndex: 30,
       }}
     >
       {/* Logo */}

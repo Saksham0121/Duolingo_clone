@@ -247,15 +247,6 @@ export default function LearnPage() {
 
   return (
     <AppShell rightPanel={<RightPanel />}>
-      {/* Course header */}
-      <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-        <span style={{ fontSize: '2rem' }}>{course.flag_emoji}</span>
-        <div>
-          <h1 style={{ fontWeight: 900, fontSize: '1.5rem' }}>{course.name}</h1>
-          <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>{course.description}</p>
-        </div>
-      </div>
-
       {/* Units and skill path */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', paddingBottom: '4rem' }}>
         {course.units.map((unit, unitIdx) => (
@@ -264,8 +255,12 @@ export default function LearnPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: unitIdx * 0.15, duration: 0.4 }}
+            style={{ position: 'relative' }}
           >
-            <UnitHeader unit={unit} />
+            {/* Sticky Unit Header — stays fixed at top of window while scrolling within the unit */}
+            <div style={{ position: 'sticky', top: '1rem', zIndex: 25, marginBottom: '1.5rem' }}>
+              <UnitHeader unit={unit} />
+            </div>
 
             {/* Skill nodes in continuous S-curve */}
             <div

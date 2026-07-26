@@ -58,6 +58,11 @@ export default function AppShell({
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '1rem',
+                position: 'sticky',
+                top: '1.5rem',
+                alignSelf: 'flex-start',
+                maxHeight: 'calc(100vh - 3rem)',
+                overflowY: 'auto',
               }}
             >
               {rightPanel}

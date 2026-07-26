@@ -147,10 +147,52 @@ function DailyQuestsSnippet() {
   );
 }
 
+// ── HUD Header inside Right Panel (Exact Match to Screenshot!) ─────────────
+function PanelHUDHeader() {
+  const { state } = useGame();
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0.25rem 0.25rem 0.75rem',
+        width: '100%',
+      }}
+    >
+      {/* Flag */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 800, fontSize: '0.9375rem' }} title="German Course">
+        <span style={{ fontSize: '1.25rem' }}>🇩🇪</span>
+        <span style={{ color: 'var(--color-text-primary)' }}>18</span>
+      </div>
+
+      {/* Streak */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 800, fontSize: '0.9375rem' }} title={`${state.streak}-day streak`}>
+        <span style={{ fontSize: '1.125rem' }}>🔥</span>
+        <span style={{ color: 'var(--color-duo-orange)' }}>{state.streak}</span>
+      </div>
+
+      {/* Gems */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 800, fontSize: '0.9375rem' }} title={`${state.gems} gems`}>
+        <span style={{ fontSize: '1.125rem' }}>💎</span>
+        <span style={{ color: 'var(--color-duo-blue)' }}>{state.gems}</span>
+      </div>
+
+      {/* Hearts */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 800, fontSize: '0.9375rem' }} title={`${state.hearts}/${state.maxHearts} hearts`}>
+        <span style={{ fontSize: '1.125rem', color: '#ff4b4b' }}>❤️</span>
+        <span style={{ color: '#ff4b4b' }}>{state.hearts}</span>
+      </div>
+    </div>
+  );
+}
+
 // ── Exported combined panel ────────────────────────────────────────────────
 export default function RightPanel() {
   return (
     <>
+      <PanelHUDHeader />
       <SuperPromoCard />
       <LeaderboardSnippet />
       <DailyQuestsSnippet />

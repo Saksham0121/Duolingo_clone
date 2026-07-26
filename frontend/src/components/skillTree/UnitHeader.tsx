@@ -13,7 +13,8 @@ export default function UnitHeader({ unit }: UnitHeaderProps) {
       className="unit-banner animate-slide-down"
       style={{
         backgroundColor: unit.color_hex,
-        boxShadow: `0 4px 24px ${unit.color_hex}44`,
+        boxShadow: `0 8px 24px ${unit.color_hex}66`,
+        borderRadius: '1rem',
       }}
     >
       <div>

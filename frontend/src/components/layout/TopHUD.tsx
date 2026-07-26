@@ -1,7 +1,6 @@
 'use client';
 
 import { useGame } from '@/context/GameContext';
-import UserAvatar from '@/components/ui/UserAvatar';
 
 export default function TopHUD() {
   const { state } = useGame();
@@ -17,66 +16,45 @@ export default function TopHUD() {
         borderBottom: '1px solid var(--color-bg-border)',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'flex-end',
-        paddingInline: '1.5rem',
-        gap: '0.25rem',
+        justifyContent: 'space-between',
+        paddingInline: '1.25rem',
+        gap: '0.5rem',
         position: 'sticky',
         top: 0,
         zIndex: 40,
         flexShrink: 0,
+        width: '100%',
       }}
     >
-      {/* Flag */}
-      <div className="hud-stat" style={{ marginRight: '0.5rem' }}>
-        <span style={{ fontSize: '1.375rem' }}>🇩🇪</span>
+      {/* Course Flag */}
+      <div className="hud-stat" title="German Course">
+        <span style={{ fontSize: '1.375rem', lineHeight: 1 }}>🇩🇪</span>
+        <span style={{ fontWeight: 900, fontSize: '0.9375rem', color: 'var(--color-text-primary)' }}>18</span>
       </div>
 
       {/* Streak */}
       <div className="hud-stat" title={`${state.streak}-day streak`}>
-        <span style={{ fontSize: '1.25rem' }}>🔥</span>
-        <span style={{ color: 'var(--color-duo-orange)' }}>{state.streak}</span>
+        <span style={{ fontSize: '1.25rem', lineHeight: 1 }}>🔥</span>
+        <span style={{ fontWeight: 900, fontSize: '0.9375rem', color: 'var(--color-duo-orange)' }}>{state.streak}</span>
       </div>
 
-      <div style={{ width: '1px', height: '1.5rem', backgroundColor: 'var(--color-bg-border)', margin: '0 0.25rem' }} />
-
-      {/* XP */}
+      {/* Total XP */}
       <div className="hud-stat" title={`${state.totalXp} total XP`}>
-        <span style={{ fontSize: '1.25rem' }}>⚡</span>
-        <span style={{ color: 'var(--color-duo-yellow)' }}>{state.totalXp.toLocaleString()}</span>
+        <span style={{ fontSize: '1.25rem', lineHeight: 1 }}>⚡</span>
+        <span style={{ fontWeight: 900, fontSize: '0.9375rem', color: 'var(--color-duo-yellow)' }}>{state.totalXp.toLocaleString()}</span>
       </div>
-
-      <div style={{ width: '1px', height: '1.5rem', backgroundColor: 'var(--color-bg-border)', margin: '0 0.25rem' }} />
 
       {/* Gems */}
       <div className="hud-stat" title={`${state.gems} gems`}>
-        <span style={{ fontSize: '1.25rem' }}>💎</span>
-        <span style={{ color: 'var(--color-duo-blue)' }}>{state.gems}</span>
+        <span style={{ fontSize: '1.25rem', lineHeight: 1 }}>💎</span>
+        <span style={{ fontWeight: 900, fontSize: '0.9375rem', color: 'var(--color-duo-blue)' }}>{state.gems}</span>
       </div>
-
-      <div style={{ width: '1px', height: '1.5rem', backgroundColor: 'var(--color-bg-border)', margin: '0 0.25rem' }} />
 
       {/* Hearts */}
       <div className="hud-stat" title={`${state.hearts}/${state.maxHearts} hearts`}>
-        {hearts.map((full, i) => (
-          <span
-            key={i}
-            className={`heart-icon${full ? '' : ' empty'}`}
-            style={{ fontSize: '1.25rem', lineHeight: 1 }}
-          >
-            ❤️
-          </span>
-        ))}
+        <span style={{ fontSize: '1.25rem', lineHeight: 1 }}>❤️</span>
+        <span style={{ fontWeight: 900, fontSize: '0.9375rem', color: '#ff4b4b' }}>{state.hearts}</span>
       </div>
-
-      {/* Avatar */}
-      <div style={{ width: '1px', height: '1.5rem', backgroundColor: 'var(--color-bg-border)', margin: '0 0.5rem' }} />
-      <UserAvatar
-        username={state.username || 'Learner'}
-        avatarUrl={state.avatarUrl}
-        size={34}
-        showBadge={true}
-        badgeIcon="⚡"
-      />
     </header>
   );
 }
