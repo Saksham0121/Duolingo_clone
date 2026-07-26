@@ -7,7 +7,7 @@ A full-stack, portfolio-quality clone of the Duolingo web application built with
 ## 🔗 Live Deployment & Links
 
 - 🌐 **Live Frontend Application (Vercel):** [https://duolingo-clone-ten-navy.vercel.app](https://duolingo-clone-ten-navy.vercel.app)
-- ⚡ **Live Backend API (Render):** [https://duolingo-clone-api-pww5.onrender.com](https://duolingo-clone-api-pww5.onrender.com)
+- ⚡ **Live Backend API (Render):** [https://duolingo-clone-api-v5h9.onrender.com](https://duolingo-clone-api-v5h9.onrender.com)
 - 💻 **GitHub Repository:** [https://github.com/Saksham0121/Duolingo_clone](https://github.com/Saksham0121/Duolingo_clone)
 
 ---
@@ -249,13 +249,13 @@ npm run dev
 4. Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
 5. Set environment variables:
    - `DATABASE_URL=sqlite:///./duolingo.db`
-   - `PYTHON_VERSION=3.11.9`
+   - `PYTHON_VERSION=3.11.0`
 
 ### Frontend (Vercel)
 
 1. Connect repository to Vercel.
 2. Set Root Directory to `frontend`.
-3. Set Environment Variable: `NEXT_PUBLIC_API_URL=https://duolingo-clone-api-pww5.onrender.com`
+3. Set Environment Variable: `NEXT_PUBLIC_API_URL=https://duolingo-clone-api-v5h9.onrender.com`
 4. Deploy!
 
 ---
