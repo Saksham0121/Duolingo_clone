@@ -1,0 +1,66 @@
+'use client';
+
+import Sidebar from '@/components/layout/Sidebar';
+import TopHUD from '@/components/layout/TopHUD';
+import { type ReactNode } from 'react';
+
+/**
+ * AppShell — the three-column layout used by all main pages.
+ * Left: Sidebar  |  Center: Main content  |  Right: contextual panel (passed as prop)
+ */
+export default function AppShell({
+  children,
+  rightPanel,
+}: {
+  children: ReactNode;
+  rightPanel?: ReactNode;
+}) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        minHeight: '100vh',
+        backgroundColor: 'var(--color-bg-primary)',
+      }}
+    >
+      {/* Left sidebar */}
+      <Sidebar />
+
+      {/* Center + right */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <TopHUD />
+
+        <div
+          style={{
+            display: 'flex',
+            flex: 1,
+            justifyContent: 'center',
+            gap: '2rem',
+            padding: '2rem',
+            maxWidth: '72rem',
+            margin: '0 auto',
+            width: '100%',
+          }}
+        >
+          {/* Main content */}
+          <main style={{ flex: 1, minWidth: 0 }}>{children}</main>
+
+          {/* Right panel (leaderboard snippet, quests, etc.) */}
+          {rightPanel && (
+            <aside
+              style={{
+                width: '22rem',
+                flexShrink: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1rem',
+              }}
+            >
+              {rightPanel}
+            </aside>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
