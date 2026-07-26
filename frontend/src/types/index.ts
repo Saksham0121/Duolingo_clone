@@ -50,10 +50,10 @@ export interface Exercise {
   type: ExerciseType;
   prompt: string;
   correct_answer: string;
-  options: string[] | null;
-  word_bank: string[] | null;
-  pairs: Array<{ left: string; right: string }> | null;
-  audio_url: string | null;
+  options?: string[] | null;
+  word_bank?: string[] | null;
+  pairs?: Array<{ left: string; right: string }> | null;
+  audio_url?: string | null;
   order_index: number;
 }
 
@@ -114,7 +114,7 @@ export interface CompleteLessonPayload {
   user_id: number;
   lesson_id: number;
   xp_earned: number;
-  mistakes: number;
+  mistakes?: number;
 }
 
 export interface ProgressResult {

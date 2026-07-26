@@ -136,6 +136,37 @@ function LessonPicker({
             {skill.completed ? 'PRACTICE AGAIN' : 'START LESSON'}
           </button>
         )}
+
+        {/* Legendary Challenge Option for Completed Skills */}
+        {skill.completed && (
+          <button
+            style={{
+              width: '100%',
+              textAlign: 'center',
+              marginTop: '0.75rem',
+              background: 'linear-gradient(135deg, #a855f7, #7e22ce)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '0.875rem',
+              padding: '0.75rem 1rem',
+              fontWeight: 900,
+              fontSize: '0.9375rem',
+              cursor: 'pointer',
+              boxShadow: '0 4px 14px rgba(168, 85, 247, 0.4)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              fontFamily: "'Nunito', sans-serif",
+            }}
+            onClick={() => {
+              const firstLesson = skill.lessons[0];
+              if (firstLesson) onSelect(firstLesson);
+            }}
+          >
+            <span>👑</span> LEGENDARY CHALLENGE (+50 XP)
+          </button>
+        )}
       </motion.div>
     </motion.div>
   );
