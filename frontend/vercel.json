@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://duolingo-clone-api.onrender.com/api/:path*"
+    }
+  ]
+}
