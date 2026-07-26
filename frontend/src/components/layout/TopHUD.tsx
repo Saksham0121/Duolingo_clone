@@ -1,11 +1,60 @@
 'use client';
 
+import { useState } from 'react';
 import { useGame } from '@/context/GameContext';
+
+function CourseSelector() {
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  return (
+    <div style={{ position: 'relative', display: 'inline-block' }}>
+      <button
+        type="button"
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+        onClick={() => setShowTooltip((prev) => !prev)}
+        className="hud-stat"
+        style={{
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          padding: '0.2rem 0.4rem',
+        }}
+      >
+        <span style={{ fontSize: '1.375rem', lineHeight: 1 }}>🇩🇪</span>
+        <span style={{ fontWeight: 900, fontSize: '0.9375rem', color: 'var(--color-text-primary)' }}>18</span>
+      </button>
+
+      {/* Hover Tooltip */}
+      {showTooltip && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '110%',
+            left: '0',
+            backgroundColor: 'var(--color-bg-elevated)',
+            color: 'var(--color-text-primary)',
+            fontWeight: 800,
+            fontSize: '0.75rem',
+            padding: '0.4rem 0.75rem',
+            borderRadius: '0.5rem',
+            whiteSpace: 'nowrap',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.35)',
+            zIndex: 100,
+            pointerEvents: 'none',
+            border: '1px solid var(--color-bg-border)',
+            letterSpacing: '0.02em',
+          }}
+        >
+          Change Course — <span style={{ color: 'var(--color-duo-yellow)' }}>Coming Soon</span>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function TopHUD() {
   const { state } = useGame();
-
-  const hearts = Array.from({ length: state.maxHearts }, (_, i) => i < state.hearts);
 
   return (
     <header
@@ -27,10 +76,7 @@ export default function TopHUD() {
       }}
     >
       {/* Course Flag */}
-      <div className="hud-stat" title="German Course">
-        <span style={{ fontSize: '1.375rem', lineHeight: 1 }}>🇩🇪</span>
-        <span style={{ fontWeight: 900, fontSize: '0.9375rem', color: 'var(--color-text-primary)' }}>18</span>
-      </div>
+      <CourseSelector />
 
       {/* Streak */}
       <div className="hud-stat" title={`${state.streak}-day streak`}>

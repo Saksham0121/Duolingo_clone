@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useGame } from '@/context/GameContext';
@@ -16,6 +17,30 @@ const NAV_ITEMS = [
 export default function Sidebar() {
   const pathname = usePathname();
   const { state } = useGame();
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+
+  useEffect(() => {
+    const saved = localStorage.getItem('duo_theme');
+    if (saved === 'light') {
+      setTheme('light');
+      document.documentElement.classList.add('light');
+    } else {
+      setTheme('dark');
+      document.documentElement.classList.remove('light');
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    if (theme === 'dark') {
+      setTheme('light');
+      document.documentElement.classList.add('light');
+      localStorage.setItem('duo_theme', 'light');
+    } else {
+      setTheme('dark');
+      document.documentElement.classList.remove('light');
+      localStorage.setItem('duo_theme', 'dark');
+    }
+  };
 
   return (
     <aside
@@ -73,6 +98,18 @@ export default function Sidebar() {
             </Link>
           );
         })}
+
+        {/* Theme Toggle Item */}
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className="sidebar-item"
+          style={{ background: 'none', border: '2px solid transparent', cursor: 'pointer', width: '100%' }}
+          title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Theme`}
+        >
+          <span style={{ fontSize: '1.375rem' }}>{theme === 'dark' ? '☀️' : '🌙'}</span>
+          <span>{theme === 'dark' ? 'LIGHT THEME' : 'DARK THEME'}</span>
+        </button>
 
         {/* MORE item */}
         <button

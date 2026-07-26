@@ -147,6 +147,63 @@ function DailyQuestsSnippet() {
   );
 }
 
+// ── Course Switcher Component with "Coming Soon" Tooltip ────────────────────
+function CourseSelector() {
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  return (
+    <div style={{ position: 'relative', display: 'inline-block' }}>
+      <button
+        type="button"
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+        onClick={() => setShowTooltip((prev) => !prev)}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.35rem',
+          fontWeight: 800,
+          fontSize: '0.9375rem',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          padding: '0.2rem 0.4rem',
+          borderRadius: '0.5rem',
+          transition: 'all 0.15s ease',
+        }}
+      >
+        <span style={{ fontSize: '1.25rem' }}>🇩🇪</span>
+        <span style={{ color: 'var(--color-text-primary)' }}>18</span>
+      </button>
+
+      {/* Hover Tooltip */}
+      {showTooltip && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '110%',
+            left: '0',
+            backgroundColor: 'var(--color-bg-elevated)',
+            color: 'var(--color-text-primary)',
+            fontWeight: 800,
+            fontSize: '0.75rem',
+            padding: '0.4rem 0.75rem',
+            borderRadius: '0.5rem',
+            whiteSpace: 'nowrap',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.35)',
+            zIndex: 100,
+            pointerEvents: 'none',
+            border: '1px solid var(--color-bg-border)',
+            letterSpacing: '0.02em',
+          }}
+        >
+          Change Course — <span style={{ color: 'var(--color-duo-yellow)' }}>Coming Soon</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── HUD Header inside Right Panel (Exact Match to Screenshot!) ─────────────
 function PanelHUDHeader() {
   const { state } = useGame();
@@ -161,11 +218,8 @@ function PanelHUDHeader() {
         width: '100%',
       }}
     >
-      {/* Flag */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 800, fontSize: '0.9375rem' }} title="German Course">
-        <span style={{ fontSize: '1.25rem' }}>🇩🇪</span>
-        <span style={{ color: 'var(--color-text-primary)' }}>18</span>
-      </div>
+      {/* Course Selector Flag */}
+      <CourseSelector />
 
       {/* Streak */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 800, fontSize: '0.9375rem' }} title={`${state.streak}-day streak`}>

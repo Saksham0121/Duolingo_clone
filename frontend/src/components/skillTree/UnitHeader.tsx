@@ -19,6 +19,7 @@ export default function UnitHeader({ unit }: UnitHeaderProps) {
     >
       <div>
         <p
+          className="unit-banner-title"
           style={{
             fontSize: '0.75rem',
             fontWeight: 800,
@@ -31,7 +32,7 @@ export default function UnitHeader({ unit }: UnitHeaderProps) {
           {unit.title}
         </p>
         {unit.description && (
-          <p style={{ fontWeight: 900, fontSize: '1.25rem', color: 'white' }}>
+          <p className="unit-banner-desc" style={{ fontWeight: 900, fontSize: '1.25rem', color: 'white' }}>
             {unit.description}
           </p>
         )}
@@ -39,6 +40,7 @@ export default function UnitHeader({ unit }: UnitHeaderProps) {
 
       {/* Guidebook button */}
       <button
+        className="unit-guidebook-btn"
         style={{
           display: 'flex',
           alignItems: 'center',

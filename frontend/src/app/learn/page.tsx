@@ -289,7 +289,7 @@ export default function LearnPage() {
             style={{ position: 'relative' }}
           >
             {/* Sticky Unit Header — stays fixed at top of window while scrolling within the unit */}
-            <div style={{ position: 'sticky', top: '1rem', zIndex: 25, marginBottom: '1.5rem' }}>
+            <div className="sticky-unit-header">
               <UnitHeader unit={unit} />
             </div>
 
