@@ -10,25 +10,64 @@ import LessonComplete from '@/components/lesson/LessonComplete';
 import OutOfHearts from '@/components/lesson/OutOfHearts';
 import ExerciseRenderer from '@/components/exercises/ExerciseRenderer';
 
+import { toast } from 'react-hot-toast';
 import { useGame } from '@/context/GameContext';
 import { getLessonExercises, completeLesson, reportWrongAnswer, refillHearts as apiRefillHearts } from '@/lib/api';
-import type { LessonWithExercises } from '@/types';
+import type { LessonWithExercises, Exercise } from '@/types';
 
-// Helper to normalize strings for comparison (case insensitive, strip extra punctuation)
+// Extend Exercise with optional retry flag
+interface QueueExercise extends Exercise {
+  isRetry?: boolean;
+}
+
+// Helper to normalize strings for comparison with German Umlaut tolerance (u->ü, a->ä, o->ö, ss->ß)
 function normalize(str: string): string {
-  return str.toLowerCase().trim().replace(/[.,/#!$%^&*;:{}=\-_`~()?]/g, "").replace(/\s+/g, " ");
+  return str
+    .toLowerCase()
+    .trim()
+    .replace(/ä|ae/g, "a")
+    .replace(/ö|oe/g, "o")
+    .replace(/ü|ue/g, "u")
+    .replace(/ß/g, "ss")
+    .replace(/[.,/#!$%^&*;:{}=\-_`~()?]/g, "")
+    .replace(/\s+/g, " ");
+}
+
+// Helper to generate a helpful hint for re-queued exercises
+function getExerciseHint(exercise: QueueExercise): string {
+  const ans = exercise.correct_answer.trim();
+  const firstWord = ans.split(' ')[0];
+
+  switch (exercise.type) {
+    case 'multiple_choice':
+      return `💡 Hint: The correct option starts with "${ans.slice(0, 4)}..."`;
+    case 'word_bank':
+      return `💡 Hint: First word in the translation is "${firstWord}"`;
+    case 'fill_blank':
+      return `💡 Hint: Missing word starts with "${ans.slice(0, 2)}..."`;
+    case 'type_answer':
+      return `💡 Hint: Answer is ${ans.length} letters long and starts with "${ans.slice(0, 2)}..."`;
+    case 'match_pairs':
+      return `💡 Hint: Pay close attention to vocabulary pair matches`;
+    default:
+      return `💡 Hint: Starts with "${ans.slice(0, 3)}..."`;
+  }
 }
 
 export default function LessonPage({ params }: { params: Promise<{ lessonId: string }> }) {
   const resolvedParams = use(params);
   const lessonId = parseInt(resolvedParams.lessonId, 10);
   const router = useRouter();
-  const { state, loseHeart, setHearts, addXp } = useGame();
+  const { state, loseHeart, setHearts, addXp, reload } = useGame();
 
   const [lessonData, setLessonData] = useState<LessonWithExercises | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Lesson playback state
+  // Lesson queue & progress state
+  const [exerciseQueue, setExerciseQueue] = useState<QueueExercise[]>([]);
+  const [initialTotalCount, setInitialTotalCount] = useState(0);
+  const [completedCount, setCompletedCount] = useState(0);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [mistakesCount, setMistakesCount] = useState(0);
 
@@ -49,6 +88,8 @@ export default function LessonPage({ params }: { params: Promise<{ lessonId: str
     try {
       const data = await getLessonExercises(lessonId);
       setLessonData(data);
+      setExerciseQueue(data.exercises);
+      setInitialTotalCount(data.exercises.length);
     } catch (err) {
       console.error('Failed to fetch lesson:', err);
     } finally {
@@ -72,7 +113,7 @@ export default function LessonPage({ params }: { params: Promise<{ lessonId: str
     );
   }
 
-  if (!lessonData || !lessonData.exercises.length) {
+  if (!lessonData || !exerciseQueue.length) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', backgroundColor: 'var(--color-bg-primary)' }}>
         <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Lesson not found</h2>
@@ -83,8 +124,7 @@ export default function LessonPage({ params }: { params: Promise<{ lessonId: str
     );
   }
 
-  const currentEx = lessonData.exercises[currentIndex];
-  const totalEx = lessonData.exercises.length;
+  const currentEx = exerciseQueue[currentIndex];
 
   // Check if answer is provided and user can click CHECK
   const hasAnswer = () => {
@@ -124,9 +164,16 @@ export default function LessonPage({ params }: { params: Promise<{ lessonId: str
 
     if (isCorrect) {
       setFeedback('correct');
+      setCompletedCount((prev) => prev + 1);
     } else {
       setFeedback('wrong');
       setMistakesCount((prev) => prev + 1);
+
+      // Re-queue the failed exercise at the end of the lesson queue!
+      setExerciseQueue((prevQueue) => [
+        ...prevQueue,
+        { ...currentEx, isRetry: true },
+      ]);
 
       // Deduct heart via context & API
       loseHeart();
@@ -142,7 +189,7 @@ export default function LessonPage({ params }: { params: Promise<{ lessonId: str
   };
 
   const handleContinue = async () => {
-    // Reset exercise state
+    // Reset exercise input state
     setFeedback(null);
     setMcSelected(null);
     setWbSelected([]);
@@ -150,23 +197,30 @@ export default function LessonPage({ params }: { params: Promise<{ lessonId: str
     setTaValue('');
     setMatchPairsDone(false);
 
-    if (currentIndex + 1 < totalEx) {
+    if (currentIndex + 1 < exerciseQueue.length) {
       setCurrentIndex((prev) => prev + 1);
     } else {
-      // Lesson complete!
+      // All exercises in queue completed!
       try {
         const xp = mistakesCount === 0 ? 15 : 10;
         setEarnedXp(xp);
-        await completeLesson({
+        const res = await completeLesson({
           user_id: state.userId,
           lesson_id: lessonId,
           xp_earned: 10,
           mistakes: mistakesCount,
         });
-        addXp(xp);
+        const finalXp = res.data?.xp_earned ?? xp;
+        addXp(finalXp);
+        toast.success(`+${finalXp} XP Earned! ⚡`);
+        reload();
         setIsCompleted(true);
       } catch (e) {
         console.error('Failed to mark lesson complete:', e);
+        const xp = mistakesCount === 0 ? 15 : 10;
+        addXp(xp);
+        toast.success(`+${xp} XP Earned! ⚡`);
+        reload();
         setIsCompleted(true);
       }
     }
@@ -192,8 +246,8 @@ export default function LessonPage({ params }: { params: Promise<{ lessonId: str
       }}
     >
       <LessonHeader
-        current={currentIndex}
-        total={totalEx}
+        current={completedCount}
+        total={initialTotalCount}
         onExit={() => router.push('/learn')}
       />
 
@@ -211,6 +265,30 @@ export default function LessonPage({ params }: { params: Promise<{ lessonId: str
           width: '100%',
         }}
       >
+        {/* Re-queued Question Hint Banner */}
+        {currentEx?.isRetry && !feedback && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{
+              backgroundColor: 'rgba(255, 200, 0, 0.15)',
+              border: '2px solid var(--color-duo-yellow)',
+              borderRadius: '0.875rem',
+              padding: '0.75rem 1.25rem',
+              marginBottom: '1.5rem',
+              color: 'var(--color-duo-yellow)',
+              fontWeight: 800,
+              fontSize: '0.9375rem',
+              width: '100%',
+              maxWidth: '36rem',
+              textAlign: 'center',
+              boxShadow: '0 4px 16px rgba(255, 200, 0, 0.1)',
+            }}
+          >
+            {getExerciseHint(currentEx)}
+          </motion.div>
+        )}
+
         <ExerciseRenderer
           exercise={currentEx}
           mcSelected={mcSelected}

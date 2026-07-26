@@ -19,6 +19,7 @@ export default function Sidebar() {
 
   return (
     <aside
+      className="app-sidebar"
       style={{
         width: '14rem',
         minHeight: '100vh',
@@ -44,9 +45,9 @@ export default function Sidebar() {
           textDecoration: 'none',
         }}
       >
-        <span style={{ fontSize: '2rem' }}>🦉</span>
         <span
           style={{
+            padding: 6,
             color: 'var(--color-duo-green)',
             fontWeight: 900,
             fontSize: '1.375rem',

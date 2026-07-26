@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import UserAvatar from '@/components/ui/UserAvatar';
 import type { LeaderboardEntry } from '@/types';
 
 interface LeaderboardRowProps {
@@ -37,33 +37,13 @@ export default function LeaderboardRow({ entry }: LeaderboardRowProps) {
         {getRankBadge(entry.rank)}
       </div>
 
-      <div style={{ flexShrink: 0, position: 'relative' }}>
-        {entry.avatar_url ? (
-          <Image
-            src={entry.avatar_url}
-            alt={entry.username}
-            width={40}
-            height={40}
-            style={{ borderRadius: '9999px', border: '2px solid var(--color-bg-border)' }}
-          />
-        ) : (
-          <div
-            style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '9999px',
-              backgroundColor: 'var(--color-duo-blue)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: 800,
-              color: 'white',
-            }}
-          >
-            {entry.username.charAt(0).toUpperCase()}
-          </div>
-        )}
-      </div>
+      <UserAvatar
+        username={entry.username}
+        avatarUrl={entry.avatar_url}
+        size={40}
+        showBadge={entry.rank <= 3}
+        badgeIcon={entry.rank === 1 ? '👑' : entry.rank === 2 ? '⚡' : '🌟'}
+      />
 
       <div style={{ flex: 1, minWidth: 0 }}>
         <p

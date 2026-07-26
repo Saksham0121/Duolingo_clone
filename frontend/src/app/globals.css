@@ -513,3 +513,41 @@ body {
   pointer-events: none;
   z-index: 200;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   RESPONSIVE MEDIA QUERIES
+───────────────────────────────────────────────────────────────────────────── */
+
+/* Hide right panel on screens smaller than 1024px */
+@media (max-width: 1024px) {
+  .app-right-panel {
+    display: none !important;
+  }
+}
+
+/* Hide desktop sidebar and show mobile bottom nav on screens smaller than 768px */
+@media (max-width: 768px) {
+  .app-sidebar {
+    display: none !important;
+  }
+  .app-mobile-nav {
+    display: flex !important;
+  }
+  .app-main-container {
+    padding: 1rem !important;
+    padding-bottom: 5.5rem !important; /* Extra padding for mobile bottom bar */
+  }
+  .unit-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+/* Hide mobile bottom nav on desktop screens */
+@media (min-width: 769px) {
+  .app-mobile-nav {
+    display: none !important;
+  }
+}
+

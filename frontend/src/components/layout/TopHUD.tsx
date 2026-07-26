@@ -1,7 +1,7 @@
 'use client';
 
 import { useGame } from '@/context/GameContext';
-import Image from 'next/image';
+import UserAvatar from '@/components/ui/UserAvatar';
 
 export default function TopHUD() {
   const { state } = useGame();
@@ -10,6 +10,7 @@ export default function TopHUD() {
 
   return (
     <header
+      className="app-hud-header"
       style={{
         height: '3.5rem',
         backgroundColor: 'var(--color-bg-card)',
@@ -68,18 +69,14 @@ export default function TopHUD() {
       </div>
 
       {/* Avatar */}
-      {state.avatarUrl && (
-        <>
-          <div style={{ width: '1px', height: '1.5rem', backgroundColor: 'var(--color-bg-border)', margin: '0 0.5rem' }} />
-          <Image
-            src={state.avatarUrl}
-            alt={state.username}
-            width={32}
-            height={32}
-            style={{ borderRadius: '9999px', border: '2px solid var(--color-bg-border)' }}
-          />
-        </>
-      )}
+      <div style={{ width: '1px', height: '1.5rem', backgroundColor: 'var(--color-bg-border)', margin: '0 0.5rem' }} />
+      <UserAvatar
+        username={state.username || 'Learner'}
+        avatarUrl={state.avatarUrl}
+        size={34}
+        showBadge={true}
+        badgeIcon="⚡"
+      />
     </header>
   );
 }

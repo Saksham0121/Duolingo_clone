@@ -2,11 +2,13 @@
 
 import Sidebar from '@/components/layout/Sidebar';
 import TopHUD from '@/components/layout/TopHUD';
+import MobileNav from '@/components/layout/MobileNav';
 import { type ReactNode } from 'react';
 
 /**
- * AppShell — the three-column layout used by all main pages.
- * Left: Sidebar  |  Center: Main content  |  Right: contextual panel (passed as prop)
+ * AppShell — the responsive layout used by all main pages.
+ * Left: Sidebar (desktop) | Center: Main content | Right: Contextual panel (desktop lg+)
+ * Bottom: Mobile nav (mobile <768px)
  */
 export default function AppShell({
   children,
@@ -23,7 +25,7 @@ export default function AppShell({
         backgroundColor: 'var(--color-bg-primary)',
       }}
     >
-      {/* Left sidebar */}
+      {/* Left sidebar (desktop) */}
       <Sidebar />
 
       {/* Center + right */}
@@ -31,6 +33,7 @@ export default function AppShell({
         <TopHUD />
 
         <div
+          className="app-main-container"
           style={{
             display: 'flex',
             flex: 1,
@@ -45,9 +48,10 @@ export default function AppShell({
           {/* Main content */}
           <main style={{ flex: 1, minWidth: 0 }}>{children}</main>
 
-          {/* Right panel (leaderboard snippet, quests, etc.) */}
+          {/* Right panel (hides automatically on screens <1024px) */}
           {rightPanel && (
             <aside
+              className="app-right-panel"
               style={{
                 width: '22rem',
                 flexShrink: 0,
@@ -61,6 +65,9 @@ export default function AppShell({
           )}
         </div>
       </div>
+
+      {/* Mobile bottom navigation (shows automatically on screens <768px) */}
+      <MobileNav />
     </div>
   );
 }

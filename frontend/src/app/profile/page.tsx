@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
+import UserAvatar from '@/components/ui/UserAvatar';
 import AppShell from '@/components/layout/AppShell';
 import AchievementBadge from '@/components/profile/AchievementBadge';
 import { useGame } from '@/context/GameContext';
@@ -32,32 +32,13 @@ export default function ProfilePage() {
       <div style={{ maxWidth: '42rem', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
         {/* User Header */}
         <div className="duo-card" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', padding: '1.75rem' }}>
-          {state.avatarUrl ? (
-            <Image
-              src={state.avatarUrl}
-              alt={state.username}
-              width={80}
-              height={80}
-              style={{ borderRadius: '9999px', border: '3px solid var(--color-duo-green)' }}
-            />
-          ) : (
-            <div
-              style={{
-                width: '80px',
-                height: '80px',
-                borderRadius: '9999px',
-                backgroundColor: 'var(--color-duo-green)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '2rem',
-                fontWeight: 900,
-                color: 'white',
-              }}
-            >
-              {state.username.charAt(0).toUpperCase()}
-            </div>
-          )}
+          <UserAvatar
+            username={state.username || 'Learner'}
+            avatarUrl={state.avatarUrl}
+            size={80}
+            showBadge={true}
+            badgeIcon="⚡"
+          />
 
           <div>
             <h1 style={{ fontWeight: 900, fontSize: '1.75rem', color: 'var(--color-text-primary)' }}>

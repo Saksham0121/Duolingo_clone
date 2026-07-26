@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { getLeaderboard } from '@/lib/api';
 import { useGame } from '@/context/GameContext';
 import type { LeaderboardEntry } from '@/types';
-import Image from 'next/image';
+import UserAvatar from '@/components/ui/UserAvatar';
 
 // ── Super Promo Card ───────────────────────────────────────────────────────
 function SuperPromoCard() {
@@ -78,9 +78,7 @@ function LeaderboardSnippet() {
             <span style={{ fontSize: '0.875rem', fontWeight: 800, width: '1.25rem', color: 'var(--color-text-muted)' }}>
               {i + 1}
             </span>
-            {e.avatar_url && (
-              <Image src={e.avatar_url} alt={e.username} width={24} height={24} style={{ borderRadius: '9999px' }} />
-            )}
+            <UserAvatar username={e.username} avatarUrl={e.avatar_url} size={28} />
             <span style={{ flex: 1, fontWeight: 700, fontSize: '0.875rem', color: e.is_current_user ? 'var(--color-duo-blue)' : 'var(--color-text-primary)' }}>
               {e.username}
             </span>

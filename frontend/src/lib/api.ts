@@ -57,6 +57,12 @@ export const getUserHearts = (userId = 1) =>
 export const getUserAchievements = (userId = 1) =>
   request<Achievement[]>(`/api/user/${userId}/achievements`);
 
+export const simulateMissedDay = (userId = 1) =>
+  request<{ success: boolean; message: string; data: { current_streak: number } }>(
+    `/api/user/${userId}/simulate-missed-day`,
+    { method: 'POST' }
+  );
+
 // ── Leaderboard ───────────────────────────────────────────────────────────────
 
 export const getLeaderboard = (userId = 1) =>

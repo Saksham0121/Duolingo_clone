@@ -9,22 +9,12 @@ import SkillNode from '@/components/skillTree/SkillNode';
 import UnitHeader from '@/components/skillTree/UnitHeader';
 import RightPanel from '@/components/skillTree/RightPanel';
 
+import { useGame } from '@/context/GameContext';
 import { getCourseWithUnits } from '@/lib/api';
 import type { CourseWithUnits, SkillWithProgress, Lesson } from '@/types';
 
-// ── Zig-zag positions for nodes within a unit ──────────────────────────────
-// Duolingo alternates nodes left-center-right in a winding path
-const ZIG_ZAG = [
-  { x: 0 },    // center
-  { x: 80 },   // right
-  { x: 140 },  // far right
-  { x: 80 },   // right
-  { x: 0 },    // center
-  { x: -80 },  // left
-  { x: -140 }, // far left
-  { x: -80 },  // left
-  { x: 0 },    // center
-];
+// ── Smooth S-wave positions for continuous winding path ─────────────────────
+const S_CURVE_OFFSETS = [0, 65, 120, 65, 0, -65, -120, -65];
 
 // ── Lesson picker popup ────────────────────────────────────────────────────
 function LessonPicker({
@@ -95,7 +85,7 @@ function LessonPicker({
             return (
               <button
                 key={lesson.id}
-                onClick={() => isAvail || isDone ? onSelect(lesson) : undefined}
+                onClick={() => isDone || isAvail ? onSelect(lesson) : undefined}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -177,6 +167,26 @@ export default function LearnPage() {
   const [course, setCourse] = useState<CourseWithUnits | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedSkill, setSelectedSkill] = useState<{ skill: SkillWithProgress; color: string } | null>(null);
+  const [scaleFactor, setScaleFactor] = useState(1);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const w = window.innerWidth;
+      if (w < 480) {
+        setScaleFactor(0.3);
+      } else if (w < 768) {
+        setScaleFactor(0.55);
+      } else {
+        setScaleFactor(1);
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const { reload: reloadUserGame } = useGame();
 
   const load = useCallback(async () => {
     try {
@@ -189,7 +199,10 @@ export default function LearnPage() {
     }
   }, []);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+    reloadUserGame();
+  }, [load, reloadUserGame]);
 
   // Find the first non-completed, non-locked skill (the "next" skill)
   const findNextSkillId = () => {
@@ -228,6 +241,9 @@ export default function LearnPage() {
     );
   }
 
+  // Cumulative index across all units so the winding curve continues seamlessly
+  let globalSkillCounter = 0;
+
   return (
     <AppShell rightPanel={<RightPanel />}>
       {/* Course header */}
@@ -250,35 +266,84 @@ export default function LearnPage() {
           >
             <UnitHeader unit={unit} />
 
-            {/* Skill nodes in zig-zag */}
+            {/* Skill nodes in continuous S-curve */}
             <div
               style={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '1.5rem',
-                paddingInline: '2rem',
+                gap: '1.75rem',
+                paddingInline: '1rem',
               }}
             >
-              {unit.skills.map((skill, skillIdx) => {
-                const zigzag = ZIG_ZAG[skillIdx % ZIG_ZAG.length];
+              {unit.skills.map((skill) => {
+                const currentSkillIdx = globalSkillCounter++;
+                const rawOffset = S_CURVE_OFFSETS[currentSkillIdx % S_CURVE_OFFSETS.length];
+                const xOffset = Math.round(rawOffset * scaleFactor);
                 const isNext = skill.id === nextSkillId;
 
+                // Side decorative flourishes like Duolingo mascot/chest
+                const isFarRight = rawOffset === 100;
+                const isFarLeft = rawOffset === -100;
+
                 return (
-                  <motion.div
+                  <div
                     key={skill.id}
-                    style={{ transform: `translateX(${zigzag.x}px)` }}
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: unitIdx * 0.15 + skillIdx * 0.08, type: 'spring', stiffness: 260, damping: 20 }}
+                    style={{
+                      position: 'relative',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '100%',
+                    }}
                   >
-                    <SkillNode
-                      skill={skill}
-                      unitColor={unit.color_hex}
-                      isNext={isNext}
-                      onClick={() => setSelectedSkill({ skill, color: unit.color_hex })}
-                    />
-                  </motion.div>
+                    {/* Left flourish item when node swings far right */}
+                    {isFarRight && scaleFactor >= 0.8 && (
+                      <motion.div
+                        animate={{ y: [0, -4, 0] }}
+                        transition={{ duration: 2.5, repeat: Infinity }}
+                        style={{
+                          position: 'absolute',
+                          left: 'calc(50% - 150px)',
+                          fontSize: '2rem',
+                          pointerEvents: 'none',
+                          userSelect: 'none',
+                        }}
+                      >
+                        🤾
+                      </motion.div>
+                    )}
+
+                    {/* Right flourish item when node swings far left */}
+                    {isFarLeft && scaleFactor >= 0.8 && (
+                      <motion.div
+                        animate={{ y: [0, -4, 0] }}
+                        transition={{ duration: 2.8, repeat: Infinity }}
+                        style={{
+                          position: 'absolute',
+                          right: 'calc(50% - 150px)',
+                          fontSize: '2rem',
+                          pointerEvents: 'none',
+                          userSelect: 'none',
+                        }}
+                      >
+                        🎁
+                      </motion.div>
+                    )}
+
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.5, x: 0 }}
+                      animate={{ opacity: 1, scale: 1, x: xOffset }}
+                      transition={{ delay: unitIdx * 0.1 + (currentSkillIdx % 3) * 0.08, type: 'spring', stiffness: 260, damping: 20 }}
+                    >
+                      <SkillNode
+                        skill={skill}
+                        unitColor={unit.color_hex}
+                        isNext={isNext}
+                        onClick={() => setSelectedSkill({ skill, color: unit.color_hex })}
+                      />
+                    </motion.div>
+                  </div>
                 );
               })}
             </div>
