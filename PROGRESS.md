@@ -8,7 +8,7 @@
 ## 📊 Overall Progress
 
 ```
-████████████░░░░░░░░░░░░░░░░░░  ~40% Complete
+████████████████████████████░░  ~90% Complete
 ```
 
 | Phase | Status |
@@ -17,13 +17,13 @@
 | 🟢 Backend: Models + Seed | ✅ DONE |
 | 🟢 Backend: FastAPI API | ✅ DONE |
 | 🟢 Frontend: Next.js Setup + Design System | ✅ DONE |
-| 🟡 Frontend: Sidebar + Top HUD | 🔄 IN PROGRESS (files written, not committed yet) |
-| ⬜ Frontend: Skill Tree / Learning Path | ⏳ PENDING |
-| ⬜ Frontend: Lesson Player Shell | ⏳ PENDING |
-| ⬜ Frontend: All 5 Exercise Types | ⏳ PENDING |
-| ⬜ Frontend + Backend: Gamification Wiring | ⏳ PENDING |
-| ⬜ Frontend: Profile + Leaderboard Pages | ⏳ PENDING |
-| ⬜ Frontend: Polish (animations, mascot, responsive) | ⏳ PENDING |
+| 🟢 Frontend: Sidebar + Top HUD | ✅ DONE |
+| 🟢 Frontend: Skill Tree / Learning Path | ✅ DONE |
+| 🟢 Frontend: Lesson Player Shell | ✅ DONE |
+| 🟢 Frontend: All 5 Exercise Types | ✅ DONE |
+| 🟢 Frontend + Backend: Gamification Wiring | ✅ DONE |
+| 🟢 Frontend: Profile + Leaderboard Pages | ✅ DONE |
+| 🟡 Frontend: Polish (animations, mascot, responsive) | 🔄 IN PROGRESS |
 | ⬜ Docs: Final README | ⏳ PENDING |
 
 ---
