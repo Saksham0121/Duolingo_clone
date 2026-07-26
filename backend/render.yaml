@@ -1,0 +1,15 @@
+# Render deployment config for the FastAPI backend
+# See: https://render.com/docs/render-yaml-reference
+services:
+  - type: web
+    name: duolingo-clone-api
+    env: python
+    region: oregon
+    buildCommand: "pip install -r requirements.txt && python seed.py"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite:///./duolingo.db
+      - key: PYTHON_VERSION
+        value: 3.11.0
