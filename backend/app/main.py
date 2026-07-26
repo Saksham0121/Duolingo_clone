@@ -25,15 +25,10 @@ app = FastAPI(
 )
 
 # ── CORS ────────────────────────────────────────────────────────────────────
-# Allow the Next.js dev server and Vercel deployment URLs
+# Allow all origins for production deployment
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:3001",
-        "https://*.vercel.app",       # Vercel preview deployments
-        "https://duolingo-clone.vercel.app",  # placeholder — update after deploy
-    ],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

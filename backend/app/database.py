@@ -4,8 +4,11 @@ All models import Base from here; the session dependency is
 injected into every FastAPI route via get_db().
 """
 import os
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
+
+load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./duolingo.db")
 

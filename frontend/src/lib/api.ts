@@ -16,7 +16,7 @@ import type {
 } from '@/types';
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
+  process.env.NEXT_PUBLIC_API_URL ?? 'https://duolingo-clone-api-pww5.onrender.com';
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, {

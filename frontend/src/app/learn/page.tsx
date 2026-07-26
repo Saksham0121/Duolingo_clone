@@ -267,7 +267,7 @@ export default function LearnPage() {
       <AppShell rightPanel={<RightPanel />}>
         <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--color-text-secondary)' }}>
           <p style={{ fontSize: '1.25rem', fontWeight: 700 }}>Could not load course.</p>
-          <p>Make sure the backend is running at <code>http://localhost:8000</code></p>
+          <p>Connecting to backend API...</p>
         </div>
       </AppShell>
     );
