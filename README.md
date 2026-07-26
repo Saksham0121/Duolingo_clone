@@ -6,7 +6,7 @@ A full-stack, portfolio-quality clone of the Duolingo web application built with
 
 ## 🔗 Live Deployment & Links
 
-- 🌐 **Live Frontend Application (Vercel):** [https://duolingo-clone-ten-navy.vercel.app](https://duolingo-clone-ten-navy.vercel.app)
+- 🌐 **Live Frontend Application (Vercel):** [https://duolingo-clone-vert-theta.vercel.app](https://duolingo-clone-vert-theta.vercel.app)
 - ⚡ **Live Backend API (Render):** [https://duolingo-clone-api-v5h9.onrender.com](https://duolingo-clone-api-v5h9.onrender.com)
 - 💻 **GitHub Repository:** [https://github.com/Saksham0121/Duolingo_clone](https://github.com/Saksham0121/Duolingo_clone)
 
