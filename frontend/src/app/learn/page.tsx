@@ -9,6 +9,7 @@ import SkillNode from '@/components/skillTree/SkillNode';
 import UnitHeader from '@/components/skillTree/UnitHeader';
 import RightPanel from '@/components/skillTree/RightPanel';
 
+import { BBQChefMascot, WateringGardenerMascot, CampfireMascot, TreasureChestNode } from '@/components/ui/PathMascots';
 import { useGame } from '@/context/GameContext';
 import { getCourseWithUnits } from '@/lib/api';
 import type { CourseWithUnits, SkillWithProgress, Lesson } from '@/types';
@@ -156,7 +157,7 @@ function UnitMascot({ color }: { color: string }) {
         fontWeight: 700,
       }}
     >
-      <span style={{ fontSize: '3.5rem', filter: `drop-shadow(0 4px 12px ${color}66)` }}>🦉</span>
+      <span style={{ fontSize: '3.5rem', filter: `drop-shadow(0 4px 12px ${color}66)` }}>⭐</span>
     </motion.div>
   );
 }
@@ -276,15 +277,18 @@ export default function LearnPage() {
                 paddingInline: '1rem',
               }}
             >
-              {unit.skills.map((skill) => {
+              {unit.skills.map((skill, skillInUnitIdx) => {
                 const currentSkillIdx = globalSkillCounter++;
-                const rawOffset = S_CURVE_OFFSETS[currentSkillIdx % S_CURVE_OFFSETS.length];
+
+                // Structured per-unit symmetric zigzag math (Unit 1 curves Right, Unit 2 curves Left, Unit 3 curves Right)
+                const unitDirection = unitIdx % 2 === 0 ? 1 : -1;
+                const unitOffsets = [0, 75, 135];
+                const rawOffset = unitOffsets[skillInUnitIdx % unitOffsets.length] * unitDirection;
                 const xOffset = Math.round(rawOffset * scaleFactor);
                 const isNext = skill.id === nextSkillId;
 
-                // Side decorative flourishes like Duolingo mascot/chest
-                const isFarRight = rawOffset === 100;
-                const isFarLeft = rawOffset === -100;
+                // Render EXACTLY 1 living character mascot per unit inside the curve void!
+                const isUnitMascotSlot = skillInUnitIdx === 1;
 
                 return (
                   <div
@@ -297,38 +301,23 @@ export default function LearnPage() {
                       width: '100%',
                     }}
                   >
-                    {/* Left flourish item when node swings far right */}
-                    {isFarRight && scaleFactor >= 0.8 && (
-                      <motion.div
-                        animate={{ y: [0, -4, 0] }}
-                        transition={{ duration: 2.5, repeat: Infinity }}
+                    {/* Exactly 1 mascot per unit placed on the opposite side of tree expansion, vertically centered */}
+                    {isUnitMascotSlot && scaleFactor >= 0.75 && (
+                      <div
                         style={{
                           position: 'absolute',
-                          left: 'calc(50% - 150px)',
-                          fontSize: '2rem',
+                          left: unitIdx % 2 === 0 ? 'calc(50% - 220px)' : undefined,
+                          right: unitIdx % 2 === 1 ? 'calc(50% - 220px)' : undefined,
+                          top: '50%',
+                          transform: 'translateY(-50%)',
                           pointerEvents: 'none',
-                          userSelect: 'none',
+                          zIndex: 2,
                         }}
                       >
-                        🤾
-                      </motion.div>
-                    )}
-
-                    {/* Right flourish item when node swings far left */}
-                    {isFarLeft && scaleFactor >= 0.8 && (
-                      <motion.div
-                        animate={{ y: [0, -4, 0] }}
-                        transition={{ duration: 2.8, repeat: Infinity }}
-                        style={{
-                          position: 'absolute',
-                          right: 'calc(50% - 150px)',
-                          fontSize: '2rem',
-                          pointerEvents: 'none',
-                          userSelect: 'none',
-                        }}
-                      >
-                        🎁
-                      </motion.div>
+                        {unitIdx === 0 && <BBQChefMascot size={120} />}
+                        {unitIdx === 1 && <WateringGardenerMascot size={120} />}
+                        {unitIdx >= 2 && <CampfireMascot size={115} />}
+                      </div>
                     )}
 
                     <motion.div
@@ -346,12 +335,12 @@ export default function LearnPage() {
                   </div>
                 );
               })}
-            </div>
 
-            {/* Mascot between units */}
-            {unitIdx < course.units.length - 1 && (
-              <UnitMascot color={unit.color_hex} />
-            )}
+              {/* Milestone Golden Treasure Chest Node */}
+              <div style={{ marginTop: '0.5rem', display: 'flex', justifyContent: 'center' }}>
+                <TreasureChestNode size={72} />
+              </div>
+            </div>
           </motion.div>
         ))}
       </div>

@@ -16,10 +16,10 @@ export default function Mascot({ state = 'idle', size = 'md' }: MascotProps) {
   };
 
   const emojiMap = {
-    idle: '🦉',
-    happy: '🦉✨',
-    sad: '🦉💔',
-    celebrating: '🦉🎉',
+    idle: '⭐',
+    happy: '🌟✨',
+    sad: '⚡',
+    celebrating: '🏆🎉',
   };
 
   const animations = {

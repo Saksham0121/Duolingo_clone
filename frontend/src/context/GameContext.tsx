@@ -108,7 +108,14 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     reload();
-  }, [reload]);
+    // Check every 30 seconds to automatically sync 10-minute heart refills
+    const interval = setInterval(() => {
+      if (state.hearts < state.maxHearts) {
+        reload();
+      }
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [reload, state.hearts, state.maxHearts]);
 
   const addXp     = (amount: number)  => dispatch({ type: 'ADD_XP', amount });
   const loseHeart = ()                => dispatch({ type: 'LOSE_HEART' });

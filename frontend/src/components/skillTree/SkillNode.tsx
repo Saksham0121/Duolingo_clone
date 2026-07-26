@@ -16,19 +16,21 @@ function CrownIndicator({ crowns }: { crowns: number }) {
     <div
       style={{
         position: 'absolute',
-        top: '-0.625rem',
-        right: '-0.375rem',
+        top: '-0.25rem',
+        right: '-0.25rem',
         backgroundColor: 'var(--color-duo-yellow)',
         borderRadius: '9999px',
-        width: '1.5rem',
-        height: '1.5rem',
+        width: '1.625rem',
+        height: '1.625rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: '0.75rem',
+        fontSize: '0.8125rem',
         fontWeight: 900,
-        border: '2px solid var(--color-bg-primary)',
+        border: '2.5px solid var(--color-bg-primary)',
         color: '#5a3e00',
+        boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
+        zIndex: 5,
       }}
     >
       {crowns === 5 ? '👑' : crowns}
@@ -38,27 +40,27 @@ function CrownIndicator({ crowns }: { crowns: number }) {
 
 function ProgressRing({ progress, total, color }: { progress: number; total: number; color: string }) {
   const pct = total > 0 ? Math.min(progress / total, 1) : 0;
-  const r = 34;
+  const r = 35;
   const circ = 2 * Math.PI * r;
   const dash = circ * pct;
 
   return (
     <svg
-      width="80"
-      height="80"
-      style={{ position: 'absolute', top: -4, left: -4, pointerEvents: 'none' }}
+      width="84"
+      height="84"
+      style={{ position: 'absolute', top: -6, left: -6, pointerEvents: 'none', zIndex: 4 }}
     >
       {/* Track */}
-      <circle cx="40" cy="40" r={r} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="4" />
+      <circle cx="42" cy="42" r={r} fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="5" />
       {/* Fill */}
       <circle
-        cx="40" cy="40" r={r}
+        cx="42" cy="42" r={r}
         fill="none"
         stroke={color}
-        strokeWidth="4"
+        strokeWidth="5"
         strokeDasharray={`${dash} ${circ}`}
         strokeLinecap="round"
-        transform="rotate(-90 40 40)"
+        transform="rotate(-90 42 42)"
         style={{ transition: 'stroke-dasharray 0.6s ease' }}
       />
     </svg>
@@ -70,89 +72,140 @@ export default function SkillNode({ skill, unitColor, onClick, isNext }: SkillNo
   const isCompleted = skill.completed;
   const isActive    = !isLocked && !isCompleted;
 
-  let bgColor   = unitColor;
-  let nodeStyle: React.CSSProperties = {};
+  // Determine icon based on skill title / type
+  const getIcon = () => {
+    if (isCompleted) return '✓';
+    if (isLocked) return '🔒';
+    const lower = skill.title.toLowerCase();
+    if (lower.includes('read') || lower.includes('book') || lower.includes('phrases')) return '📖';
+    if (lower.includes('listen') || lower.includes('audio') || lower.includes('numbers')) return '🎧';
+    return skill.icon_emoji || '⭐';
+  };
+
+  // Color shades for 3D sphere gradient and bevel shadow
+  let baseColor = unitColor;
+  let shadowColor = '#2b5a00'; // dark green default
+
+  if (unitColor.toLowerCase().includes('1cb0f6') || unitColor.toLowerCase().includes('blue')) {
+    baseColor = '#1cb0f6';
+    shadowColor = '#0d8fd4';
+  } else if (unitColor.toLowerCase().includes('ce82ff') || unitColor.toLowerCase().includes('purple')) {
+    baseColor = '#ce82ff';
+    shadowColor = '#a560e8';
+  } else if (unitColor.toLowerCase().includes('ff9600') || unitColor.toLowerCase().includes('orange')) {
+    baseColor = '#ff9600';
+    shadowColor = '#e07b00';
+  } else if (unitColor.toLowerCase().includes('58cc02') || unitColor.toLowerCase().includes('green')) {
+    baseColor = '#58cc02';
+    shadowColor = '#46a302';
+  }
 
   if (isLocked) {
-    bgColor = 'var(--color-bg-elevated)';
-    nodeStyle = { opacity: 0.6 };
-  } else if (isCompleted) {
-    // slightly darker shade of the unit color
-    nodeStyle = { filter: 'brightness(0.85)' };
+    baseColor = '#2d4a5e';
+    shadowColor = '#1f3240';
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.625rem', userSelect: 'none' }}>
       {/* Bouncing "START" arrow for the next available skill */}
       {isNext && (
         <motion.div
           animate={{ y: [0, -6, 0] }}
           transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
           style={{
-            backgroundColor: unitColor,
+            backgroundColor: baseColor,
             color: 'white',
             fontWeight: 900,
             fontSize: '0.8125rem',
-            padding: '0.3rem 0.75rem',
+            padding: '0.3rem 0.875rem',
             borderRadius: '9999px',
-            letterSpacing: '0.05em',
-            boxShadow: `0 4px 16px ${unitColor}55`,
+            letterSpacing: '0.06em',
+            boxShadow: `0 4px 16px ${baseColor}66`,
+            border: '2px solid rgba(255,255,255,0.3)',
+            zIndex: 10,
           }}
         >
           START ▼
         </motion.div>
       )}
 
-      {/* Node button */}
+      {/* Glossy 3D Sphere Button */}
       <motion.button
-        whileHover={!isLocked ? { scale: 1.1 } : {}}
-        whileTap={!isLocked ? { scale: 0.95 } : {}}
+        whileHover={!isLocked ? { scale: 1.08, y: -2 } : {}}
+        whileTap={!isLocked ? { scale: 0.96, y: 4 } : {}}
         onClick={isLocked ? undefined : onClick}
-        className={`skill-node${isLocked ? ' locked' : ''}${isCompleted ? ' completed' : ''}${isActive ? ' active' : ''}`}
         style={{
-          backgroundColor: bgColor,
-          ...nodeStyle,
+          width: '4.5rem',
+          height: '4.5rem',
+          borderRadius: '9999px',
+          background: isLocked
+            ? 'linear-gradient(180deg, #3a586e 0%, #253a4a 100%)'
+            : `linear-gradient(180deg, ${baseColor} 0%, ${shadowColor} 100%)`,
           position: 'relative',
-          boxShadow: isActive
-            ? `0 6px 0 ${unitColor}99, 0 8px 20px ${unitColor}44`
-            : isCompleted
-            ? `0 4px 0 ${unitColor}77`
-            : '0 4px 0 var(--color-text-muted)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          border: 'none',
+          cursor: isLocked ? 'not-allowed' : 'pointer',
+          boxShadow: isLocked
+            ? 'inset 0 2px 3px rgba(255,255,255,0.2), 0 6px 0 #192833, 0 8px 16px rgba(0,0,0,0.4)'
+            : `inset 0 3px 4px rgba(255,255,255,0.45), inset 0 -4px 6px rgba(0,0,0,0.25), 0 8px 0 ${shadowColor}, 0 12px 24px rgba(0,0,0,0.4)`,
+          opacity: isLocked ? 0.7 : 1,
+          transition: 'box-shadow 0.15s ease, opacity 0.15s ease',
         }}
         aria-label={`${skill.title}${isLocked ? ' (locked)' : ''}`}
       >
+        {/* Top Glossy Highlight (Crescent Glass Reflection) */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '3px',
+            left: '6px',
+            right: '6px',
+            height: '1.75rem',
+            borderRadius: '9999px',
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 100%)',
+            pointerEvents: 'none',
+          }}
+        />
+
         {/* Progress ring for active skill */}
         {isActive && (
           <ProgressRing
             progress={skill.completed_lessons}
             total={skill.total_lessons}
-            color="white"
+            color="#ffffff"
           />
         )}
 
-        {/* Icon */}
-        {isCompleted ? (
-          <span style={{ fontSize: '1.875rem' }}>✓</span>
-        ) : isLocked ? (
-          <span style={{ fontSize: '1.875rem' }}>🔒</span>
-        ) : (
-          <span style={{ fontSize: '1.875rem' }}>{skill.icon_emoji}</span>
-        )}
+        {/* Icon Inside Node */}
+        <span
+          style={{
+            fontSize: '1.875rem',
+            color: '#ffffff',
+            fontWeight: 900,
+            textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+            zIndex: 3,
+            lineHeight: 1,
+          }}
+        >
+          {getIcon()}
+        </span>
 
         {/* Crown badge */}
         <CrownIndicator crowns={skill.crowns} />
       </motion.button>
 
-      {/* Skill title tooltip on hover — shown as a small label */}
+      {/* Skill title label */}
       <span
         style={{
           fontSize: '0.75rem',
-          fontWeight: 700,
-          color: isLocked ? 'var(--color-text-muted)' : 'var(--color-text-secondary)',
+          fontWeight: 800,
+          color: isLocked ? 'var(--color-text-muted)' : 'var(--color-text-primary)',
           letterSpacing: '0.02em',
-          maxWidth: '5rem',
+          maxWidth: '5.5rem',
           textAlign: 'center',
-          lineHeight: 1.2,
+          lineHeight: 1.25,
         }}
       >
         {skill.title}

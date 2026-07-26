@@ -68,7 +68,7 @@ export default function LessonComplete({ xpEarned, mistakes, streak, onContinue 
           transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           style={{ fontSize: '5rem', marginBottom: '0.5rem' }}
         >
-          🦉
+          🏆
         </motion.div>
 
         <h2 style={{ fontWeight: 900, fontSize: '2rem', marginBottom: '0.25rem', color: 'var(--color-duo-green)' }}>

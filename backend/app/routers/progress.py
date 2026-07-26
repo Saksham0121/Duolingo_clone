@@ -140,6 +140,9 @@ def wrong_answer(payload: WrongAnswerPayload, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Hearts record not found")
 
     if hearts.count > 0:
+        # Start 10-minute refill timer if hearts were previously maxed or timestamp empty
+        if hearts.count == hearts.max_hearts or hearts.last_refill_at is None:
+            hearts.last_refill_at = datetime.now(timezone.utc)
         hearts.count -= 1
         db.commit()
 

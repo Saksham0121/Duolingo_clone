@@ -57,10 +57,18 @@ def mc(lesson_id, order, prompt, correct, options):
 
 def wb(lesson_id, order, prompt, correct, word_bank):
     """Word-bank / tap-the-words exercise."""
+    correct_words = correct.split()
+    bank_copy = list(word_bank)
+    for word in correct_words:
+        needed = correct_words.count(word)
+        current = bank_copy.count(word)
+        if current < needed:
+            bank_copy.extend([word] * (needed - current))
+
     return Exercise(
         lesson_id=lesson_id, type="word_bank",
         prompt=prompt, correct_answer=correct,
-        word_bank_json=json.dumps(word_bank), order_index=order,
+        word_bank_json=json.dumps(bank_copy), order_index=order,
     )
 
 
@@ -395,7 +403,7 @@ def seed():
                ["Red", "Blue", "Green", "Yellow"]),
             wb(lid, 2, "Translate: 'The sky is blue and the grass is green'",
                "Der Himmel ist blau und das Gras ist grün",
-               ["Der", "Himmel", "ist", "blau", "und", "das", "Gras", "grün", "rot"]),
+               ["Der", "Himmel", "ist", "blau", "und", "das", "Gras", "ist", "grün", "rot"]),
             mp(lid, 3, "Match colors:",
                [{"left":"rot","right":"red"},{"left":"blau","right":"blue"},
                 {"left":"grün","right":"green"},{"left":"gelb","right":"yellow"}]),
