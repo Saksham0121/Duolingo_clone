@@ -214,6 +214,67 @@ export function WateringGardenerMascot({ size = 120 }: { size?: number }) {
   );
 }
 
+// ── Guitarist Mascot (Playing Acoustic Guitar for Unit 4) ────────────────────
+export function GuitaristMascot({ size = 115 }: { size?: number }) {
+  return (
+    <motion.div
+      animate={{ y: [0, -3, 0] }}
+      transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+      style={{
+        width: `${size}px`,
+        height: `${size * 1.15}px`,
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.4))',
+        userSelect: 'none',
+      }}
+    >
+      <svg viewBox="0 0 100 120" width={size} height={size * 1.15} fill="none">
+        {/* Shadow */}
+        <ellipse cx="50" cy="110" rx="38" ry="8" fill="#000000" opacity="0.35" />
+
+        {/* Stool / Log */}
+        <rect x="36" y="85" width="28" height="20" rx="4" fill="#78350f" />
+        <rect x="32" y="82" width="36" height="6" rx="3" fill="#92400e" />
+
+        {/* Character Body (Shirt & Pants) */}
+        <path d="M35 55 Q50 48 65 55 L62 84 H38 Z" fill="#059669" />
+        <path d="M38 84 L36 106 H46 L47 84 Z" fill="#1e3a8a" />
+        <path d="M53 84 L54 106 H64 L62 84 Z" fill="#1e3a8a" />
+
+        {/* Guitar Body */}
+        <ellipse cx="62" cy="72" rx="14" ry="12" fill="#d97706" stroke="#b45309" strokeWidth="1.5" />
+        <circle cx="62" cy="72" r="4" fill="#451a03" />
+        <path d="M50 68 L22 45" stroke="#78350f" strokeWidth="4" strokeLinecap="round" />
+
+        {/* Head & Face */}
+        <circle cx="48" cy="38" r="16" fill="#8d5524" />
+        {/* Turban */}
+        <path d="M30 36 Q48 20 66 36 Q48 42 30 36 Z" fill="#dc2626" />
+        <circle cx="48" cy="28" r="4" fill="#b91c1c" />
+
+        {/* Eyes closed enjoying music */}
+        <path d="M42 38 Q45 42 48 38" stroke="#111111" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <path d="M52 38 Q55 42 58 38" stroke="#111111" strokeWidth="2" fill="none" strokeLinecap="round" />
+        {/* Smile */}
+        <path d="M46 45 Q50 49 54 45" stroke="#ffffff" strokeWidth="2" fill="none" strokeLinecap="round" />
+
+        {/* Floating Musical Notes */}
+        <motion.text
+          animate={{ y: [0, -12, 0], opacity: [0.6, 1, 0.6] }}
+          transition={{ duration: 1.8, repeat: Infinity }}
+          x="75" y="45" fill="#f59e0b" fontSize="16" fontWeight="bold"
+        >
+          🎵
+        </motion.text>
+      </svg>
+    </motion.div>
+  );
+}
+
 // ── Treasure Chest Node (Milestone Goal) ───────────────────────────────────
 export function TreasureChestNode({ size = 72 }: { size?: number }) {
   return (

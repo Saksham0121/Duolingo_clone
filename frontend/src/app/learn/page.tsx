@@ -9,7 +9,7 @@ import SkillNode from '@/components/skillTree/SkillNode';
 import UnitHeader from '@/components/skillTree/UnitHeader';
 import RightPanel from '@/components/skillTree/RightPanel';
 
-import { BBQChefMascot, WateringGardenerMascot, CampfireMascot, TreasureChestNode } from '@/components/ui/PathMascots';
+import { BBQChefMascot, WateringGardenerMascot, CampfireMascot, GuitaristMascot, TreasureChestNode } from '@/components/ui/PathMascots';
 import { useGame } from '@/context/GameContext';
 import { getCourseWithUnits } from '@/lib/api';
 import type { CourseWithUnits, SkillWithProgress, Lesson } from '@/types';
@@ -311,7 +311,8 @@ export default function LearnPage() {
                       >
                         {unitIdx === 0 && <BBQChefMascot size={120} />}
                         {unitIdx === 1 && <WateringGardenerMascot size={120} />}
-                        {unitIdx >= 2 && <CampfireMascot size={115} />}
+                        {unitIdx === 2 && <CampfireMascot size={115} />}
+                        {unitIdx >= 3 && <GuitaristMascot size={115} />}
                       </div>
                     )}
 

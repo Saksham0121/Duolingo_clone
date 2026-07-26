@@ -185,7 +185,7 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Seed the database (Creates German course, 3 units, 9 skills, 27 lessons, 135 exercises, 10 users)
+# Seed the database (Creates German course, 4 units, 12 skills, 36 lessons, 180 exercises, 10 users)
 python seed.py
 
 # Start FastAPI server

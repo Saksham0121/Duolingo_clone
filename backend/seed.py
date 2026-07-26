@@ -129,7 +129,10 @@ def seed():
         unit3 = Unit(course_id=german.id, title="Unit 3: Travel & Food",
                      description="Restaurants, transport, and city navigation",
                      order_index=3, color_hex="#ff9600")
-        db.add_all([unit1, unit2, unit3])
+        unit4 = Unit(course_id=german.id, title="Unit 4: Work & Daily Life",
+                     description="Career, schedule, weather, and hobbies",
+                     order_index=4, color_hex="#1cb0f6")
+        db.add_all([unit1, unit2, unit3, unit4])
         db.flush()
 
         # ------------------------------------------------------------------ #
@@ -147,8 +150,12 @@ def seed():
         s_food    = Skill(unit_id=unit3.id, title="Food & Drink", icon_emoji="🍕", order_index=7, total_lessons=3)
         s_travel  = Skill(unit_id=unit3.id, title="Travel",       icon_emoji="✈️", order_index=8, total_lessons=3)
         s_city    = Skill(unit_id=unit3.id, title="City",         icon_emoji="🏙️", order_index=9, total_lessons=3)
+        # Unit 4
+        s_work    = Skill(unit_id=unit4.id, title="Work & Career",  icon_emoji="💼", order_index=10, total_lessons=3)
+        s_time    = Skill(unit_id=unit4.id, title="Time & Dates",   icon_emoji="⏰", order_index=11, total_lessons=3)
+        s_weather = Skill(unit_id=unit4.id, title="Weather & Hobbies", icon_emoji="⛅", order_index=12, total_lessons=3)
 
-        all_skills = [s_greet, s_numbers, s_phrases, s_family, s_home, s_objects, s_food, s_travel, s_city]
+        all_skills = [s_greet, s_numbers, s_phrases, s_family, s_home, s_objects, s_food, s_travel, s_city, s_work, s_time, s_weather]
         db.add_all(all_skills)
         db.flush()
 
@@ -170,6 +177,9 @@ def seed():
         l_food    = make_lessons(s_food,    ["At the Café", "Ordering Food", "Drinks"])
         l_travel  = make_lessons(s_travel,  ["At the Airport", "On the Train", "Directions"])
         l_city    = make_lessons(s_city,    ["Landmarks", "Shopping", "Asking for Help"])
+        l_work    = make_lessons(s_work,    ["Jobs & Professions", "In the Office", "Work Routines"])
+        l_time    = make_lessons(s_time,    ["Days of the Week", "Telling Time", "Months & Seasons"])
+        l_weather = make_lessons(s_weather, ["Weather Today", "Sports & Fitness", "Free Time Activities"])
 
         # ------------------------------------------------------------------ #
         # EXERCISES  (5 per lesson × 27 lessons = 135 total)
@@ -568,6 +578,135 @@ def seed():
             ta(lid, 5, "How do you say 'I am lost' in German?", "Ich habe mich verirrt"),
         ]
 
+        # ── WORK & CAREER ────────────────────────────────────────────────── #
+        lid = l_work[0].id
+        exercises += [
+            mc(lid, 1, "What does 'Lehrer' mean?", "Teacher",
+               ["Teacher", "Engineer", "Doctor", "Manager"]),
+            wb(lid, 2, "Translate: 'I am a software engineer'",
+               "Ich bin Softwareentwickler",
+               ["Ich", "bin", "Softwareentwickler", "Arzt", "Lehrer"]),
+            mp(lid, 3, "Match professions:",
+               [{"left":"Arzt","right":"doctor"},{"left":"Lehrer","right":"teacher"},
+                {"left":"Ingenieur","right":"engineer"},{"left":"Bäcker","right":"baker"}]),
+            fb(lid, 4, "Mein Vater ist ___. (teacher)", "Lehrer"),
+            ta(lid, 5, "How do you say 'What is your job?' in German?", "Was ist Ihr Beruf?"),
+        ]
+
+        lid = l_work[1].id
+        exercises += [
+            mc(lid, 1, "What does 'Büro' mean?", "Office",
+               ["Office", "School", "Factory", "Store"]),
+            wb(lid, 2, "Translate: 'The meeting starts now'",
+               "Das Meeting beginnt jetzt",
+               ["Das", "Meeting", "beginnt", "jetzt", "später", "morgen"]),
+            mp(lid, 3, "Match office words:",
+               [{"left":"Computer","right":"computer"},{"left":"Schreibtisch","right":"desk"},
+                {"left":"Drucker","right":"printer"},{"left":"E-Mail","right":"email"}]),
+            fb(lid, 4, "Ich arbeite im ___. (office)", "Büro"),
+            ta(lid, 5, "How do you say 'working hours' in German?", "Arbeitszeiten"),
+        ]
+
+        lid = l_work[2].id
+        exercises += [
+            mc(lid, 1, "What does 'Feierabend' mean?", "End of the workday",
+               ["End of the workday", "Party", "Morning shift", "Lunch break"]),
+            wb(lid, 2, "Translate: 'I have finished work for today'",
+               "Ich habe heute Feierabend",
+               ["Ich", "habe", "heute", "Feierabend", "Pause", "Urlaub"]),
+            mp(lid, 3, "Match work routines:",
+               [{"left":"Pause","right":"break"},{"left":"Urlaub","right":"vacation"},
+                {"left":"Überstunden","right":"overtime"},{"left":"Gehalt","right":"salary"}]),
+            fb(lid, 4, "Endlich ___! (end of workday)", "Feierabend"),
+            ta(lid, 5, "How do you say 'vacation' in German?", "Urlaub"),
+        ]
+
+        # ── TIME & DATES ─────────────────────────────────────────────────── #
+        lid = l_time[0].id
+        exercises += [
+            mc(lid, 1, "What does 'Montag' mean?", "Monday",
+               ["Monday", "Tuesday", "Sunday", "Friday"]),
+            wb(lid, 2, "Translate: 'Today is Friday and tomorrow is Saturday'",
+               "Heute ist Freitag und morgen ist Samstag",
+               ["Heute", "ist", "Freitag", "und", "morgen", "ist", "Samstag", "Sonntag"]),
+            mp(lid, 3, "Match days:",
+               [{"left":"Montag","right":"Monday"},{"left":"Mittwoch","right":"Wednesday"},
+                {"left":"Freitag","right":"Friday"},{"left":"Sonntag","right":"Sunday"}]),
+            fb(lid, 4, "Morgen ist ___. (Saturday)", "Samstag"),
+            ta(lid, 5, "How do you say 'weekend' in German?", "Wochenende"),
+        ]
+
+        lid = l_time[1].id
+        exercises += [
+            mc(lid, 1, "What does 'Wie viel Uhr ist es?' mean?", "What time is it?",
+               ["What time is it?", "What day is it?", "How old are you?", "Where are you going?"]),
+            wb(lid, 2, "Translate: 'It is eight o’clock'",
+               "Es ist acht Uhr",
+               ["Es", "ist", "acht", "Uhr", "zehn", "sieben"]),
+            mp(lid, 3, "Match time terms:",
+               [{"left":"Morgen","right":"morning"},{"left":"Mittag","right":"noon"},
+                {"left":"Abend","right":"evening"},{"left":"Nacht","right":"night"}]),
+            fb(lid, 4, "Guten ___! (evening)", "Abend"),
+            ta(lid, 5, "How do you say 'half past eight' in German?", "Halb neun"),
+        ]
+
+        lid = l_time[2].id
+        exercises += [
+            mc(lid, 1, "What does 'Sommer' mean?", "Summer",
+               ["Summer", "Winter", "Spring", "Autumn"]),
+            wb(lid, 2, "Translate: 'In summer it is warm'",
+               "Im Sommer ist es warm",
+               ["Im", "Sommer", "ist", "es", "warm", "kalt", "heiß"]),
+            mp(lid, 3, "Match seasons:",
+               [{"left":"Frühling","right":"spring"},{"left":"Sommer","right":"summer"},
+                {"left":"Herbst","right":"autumn"},{"left":"Winter","right":"winter"}]),
+            fb(lid, 4, "Im ___ schneit es. (winter)", "Winter"),
+            ta(lid, 5, "How do you say 'Happy New Year!' in German?", "Frohes neues Jahr"),
+        ]
+
+        # ── WEATHER & HOBBIES ────────────────────────────────────────────── #
+        lid = l_weather[0].id
+        exercises += [
+            mc(lid, 1, "What does 'Die Sonne scheint' mean?", "The sun is shining",
+               ["The sun is shining", "It is raining", "It is snowing", "It is windy"]),
+            wb(lid, 2, "Translate: 'The weather today is very nice'",
+               "Das Wetter heute ist sehr schön",
+               ["Das", "Wetter", "heute", "ist", "sehr", "schön", "schlecht"]),
+            mp(lid, 3, "Match weather words:",
+               [{"left":"Regen","right":"rain"},{"left":"Schnee","right":"snow"},
+                {"left":"Wind","right":"wind"},{"left":"Wolke","right":"cloud"}]),
+            fb(lid, 4, "Es ist heute sehr ___. (warm)", "warm"),
+            ta(lid, 5, "How do you say 'It is raining' in German?", "Es regnet"),
+        ]
+
+        lid = l_weather[1].id
+        exercises += [
+            mc(lid, 1, "What does 'Fußball' mean?", "Soccer / Football",
+               ["Soccer / Football", "Basketball", "Tennis", "Swimming"]),
+            wb(lid, 2, "Translate: 'I play soccer every Saturday'",
+               "Ich spiele jeden Samstag Fußball",
+               ["Ich", "spiele", "jeden", "Samstag", "Fußball", "Tennis"]),
+            mp(lid, 3, "Match sports:",
+               [{"left":"Schwimmen","right":"swimming"},{"left":"Laufen","right":"running"},
+                {"left":"Radfahren","right":"cycling"},{"left":"Tennis","right":"tennis"}]),
+            fb(lid, 4, "Ich ___ gern Tennis. (play)", "spiele"),
+            ta(lid, 5, "How do you say 'I like swimming' in German?", "Ich schwimme gern"),
+        ]
+
+        lid = l_weather[2].id
+        exercises += [
+            mc(lid, 1, "What does 'Musik hören' mean?", "Listening to music",
+               ["Listening to music", "Reading books", "Watching movies", "Cooking"]),
+            wb(lid, 2, "Translate: 'In my free time I read books'",
+               "In meiner Freizeit lese ich Bücher",
+               ["In", "meiner", "Freizeit", "lese", "ich", "Bücher", "Musik"]),
+            mp(lid, 3, "Match hobbies:",
+               [{"left":"Kochen","right":"cooking"},{"left":"Lesen","right":"reading"},
+                {"left":"Malen","right":"painting"},{"left":"Tanzen","right":"dancing"}]),
+            fb(lid, 4, "Mein Hobby ist ___. (reading)", "Lesen"),
+            ta(lid, 5, "How do you say 'What are your hobbies?' in German?", "Was sind deine Hobbies?"),
+        ]
+
         db.add_all(exercises)
         db.flush()
 
@@ -679,7 +818,7 @@ def seed():
         db.commit()
         print("✅  Seed complete!")
         print(f"    Course: German 🇩🇪")
-        print(f"    Units: 3  |  Skills: 9  |  Lessons: 27  |  Exercises: 135")
+        print(f"    Units: 4  |  Skills: 12  |  Lessons: 36  |  Exercises: 180")
         print(f"    Users: 10 (1 learner + 9 seeded leaderboard users)")
 
     except Exception as e:
